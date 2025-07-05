@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,10 +10,36 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Login attempt:", { email, password });
-  };
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Login successful!");
+      navigate("/dashboard"); // Or wherever you want to go after login
+    } else if (data.message === "User not found") {
+      alert("User not found. Please sign up first.");
+      navigate("/signup");
+    } else if (data.message === "Invalid credentials") {
+      alert("Incorrect email or password.");
+    } else {
+      alert("Something went wrong.");
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Server error.");
+  }
+};
 
   const handleBackToHome = () => {
     navigate('/');

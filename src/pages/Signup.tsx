@@ -13,15 +13,35 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const navigate = useNavigate();
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
+  const handleSignup = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (password !== confirmPassword) {
+    alert("Passwords don't match!");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fullName, email, password }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Signup successful!");
+      navigate("/login");
+    } else {
+      alert(data.message || "Signup failed.");
     }
-    // TODO: Implement signup logic with Supabase
-    console.log("Signup attempt:", { email, password, fullName });
-  };
+  } catch (err) {
+    console.error("Signup error:", err);
+    alert("Server error.");
+  }
+};
 
   const handleBackToHome = () => {
     navigate('/');
