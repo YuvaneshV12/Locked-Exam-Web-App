@@ -29,7 +29,32 @@ const subjects: Subject[] = [
     icon: <Code className="w-8 h-8" />,
     questions: 20,
     duration: 20
-  }
+  },
+  {
+    id: 'python',
+    name: 'Python Programming',
+    description: 'Syntax, Data Types, Functions, OOP, Libraries',
+    icon: <Code className="w-8 h-8" />,
+    questions: 20,
+    duration: 20
+  },
+  {
+  id: 'AI',
+  name: 'Artificial Intelligence',
+  description: 'Machine Learning, NLP, Neural Networks, Robotics',
+  icon: <Code className="w-8 h-8" />,
+  questions: 20,
+  duration: 20
+  },
+  {
+  id: 'SQL',
+  name: 'SQL Database',
+  description: 'Queries, Joins, Transactions, Database Design',
+  icon: <Code className="w-8 h-8" />,
+  questions: 20,
+  duration: 20
+  },
+
 ];
 
 interface SubjectSelectionProps {
@@ -59,7 +84,6 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
             <div className="flex gap-3">
               <Button 
                 onClick={handleLogin}
-                variant="outline"
                 className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
               >
                 Login

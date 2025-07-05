@@ -32,7 +32,7 @@ const Signup = () => {
 
     const data = await response.json();
     if (response.ok) {
-      navigate("/login");
+      navigate("");
     } else {
       alert(data.message || "Signup failed.");
     }
