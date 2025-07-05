@@ -2,13 +2,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; // ← added Navigate
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -16,10 +17,17 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* Default route now redirects to /login */}
+          <Route path="/" element={<Navigate to="/login" />} />
+
+          {/* Explicit Login & Signup pages */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+          {/* Home page (exam selection) shown only after login */}
+          <Route path="/subjectselection" element={<Index />} />
+
+          {/* Catch-all route for unmatched paths */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

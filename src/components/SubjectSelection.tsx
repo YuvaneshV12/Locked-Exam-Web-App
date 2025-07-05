@@ -87,20 +87,6 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
               <BookOpen className="w-12 h-12 text-indigo-600 mr-4" />
               <h1 className="text-4xl font-bold text-gray-900">TechExamHub</h1>
             </div>
-            <div className="flex gap-3">
-              <Button 
-                onClick={handleLogin}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              >
-                Login
-              </Button>
-              <Button 
-                onClick={handleSignup}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              >
-                Sign Up
-              </Button>
-            </div>
           </div>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Test your technical knowledge with our comprehensive exam platform. 
