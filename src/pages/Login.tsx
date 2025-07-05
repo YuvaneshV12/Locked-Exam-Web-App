@@ -25,8 +25,7 @@ const Login = () => {
     const data = await response.json();
 
     if (response.ok) {
-      alert("Login successful!");
-      navigate("/dashboard"); // Or wherever you want to go after login
+      navigate("/dashboard");
     } else if (data.message === "User not found") {
       alert("User not found. Please sign up first.");
       navigate("/signup");
