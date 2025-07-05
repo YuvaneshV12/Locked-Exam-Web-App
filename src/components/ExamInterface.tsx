@@ -152,19 +152,497 @@ const sampleQuestions: { [key: string]: Question[] } = {
   ],
   java: [
     {
-      id: 1,
-      question: "Which keyword is used to inherit a class in Java?",
-      options: ["implements", "extends", "inherits", "super"],
-      correctAnswer: 1
-    },
-    {
-      id: 2,
-      question: "What is the size of int data type in Java?",
-      options: ["2 bytes", "4 bytes", "8 bytes", "16 bytes"],
-      correctAnswer: 1
-    },
+    id: 1,
+    question: "Which keyword is used to inherit a class in Java?",
+    options: ["implements", "extends", "inherits", "super"],
+    correctAnswer: 1
+  },
+  {
+    id: 2,
+    question: "What is the size of int data type in Java?",
+    options: ["2 bytes", "4 bytes", "8 bytes", "16 bytes"],
+    correctAnswer: 1
+  },
+  {
+    id: 3,
+    question: "Which method is the entry point of a Java program?",
+    options: ["start()", "run()", "main()", "init()"],
+    correctAnswer: 2
+  },
+  {
+    id: 4,
+    question: "Which of the following is not a primitive data type in Java?",
+    options: ["byte", "boolean", "String", "int"],
+    correctAnswer: 2
+  },
+  {
+    id: 5,
+    question: "Which of these is used to handle exceptions in Java?",
+    options: ["try-catch", "if-else", "for loop", "switch"],
+    correctAnswer: 0
+  },
+  {
+    id: 6,
+    question: "Which package contains the Scanner class?",
+    options: ["java.io", "java.util", "java.lang", "java.net"],
+    correctAnswer: 1
+  },
+  {
+    id: 7,
+    question: "Which keyword is used to create an object in Java?",
+    options: ["this", "class", "new", "create"],
+    correctAnswer: 2
+  },
+  {
+    id: 8,
+    question: "What is the default value of a boolean variable in Java?",
+    options: ["true", "false", "0", "null"],
+    correctAnswer: 1
+  },
+  {
+    id: 9,
+    question: "Which access modifier makes a member visible to all classes?",
+    options: ["private", "protected", "public", "default"],
+    correctAnswer: 2
+  },
+  {
+    id: 10,
+    question: "Which class is the parent of all classes in Java?",
+    options: ["Object", "Class", "Main", "Super"],
+    correctAnswer: 0
+  },
+  {
+    id: 11,
+    question: "What will happen if the main method is declared as private?",
+    options: ["Compile-time error", "Runtime error", "Program runs normally", "It gets ignored"],
+    correctAnswer: 0
+  },
+  {
+    id: 12,
+    question: "Which interface must be implemented by a class to support multithreading?",
+    options: ["Serializable", "Cloneable", "Runnable", "Thread"],
+    correctAnswer: 2
+  },
+  {
+    id: 13,
+    question: "Which keyword is used to prevent inheritance?",
+    options: ["static", "final", "abstract", "private"],
+    correctAnswer: 1
+  },
+  {
+    id: 14,
+    question: "Which exception is thrown when an array is accessed with an illegal index?",
+    options: ["NullPointerException", "ArrayIndexOutOfBoundsException", "ArithmeticException", "IllegalArgumentException"],
+    correctAnswer: 1
+  },
+  {
+    id: 15,
+    question: "Which of the following is a marker interface?",
+    options: ["Runnable", "Cloneable", "Comparable", "Serializable"],
+    correctAnswer: 3
+  },
+  {
+    id: 16,
+    question: "What does JVM stand for?",
+    options: ["Java Virtual Memory", "Java Very Machine", "Java Virtual Machine", "Just Virtual Machine"],
+    correctAnswer: 2
+  },
+  {
+    id: 17,
+    question: "What is the return type of the main method?",
+    options: ["void", "int", "String", "boolean"],
+    correctAnswer: 0
+  },
+  {
+    id: 18,
+    question: "Which of the following can be used to create a thread in Java?",
+    options: ["Extending Thread class", "Implementing Runnable interface", "Both of the above", "None of the above"],
+    correctAnswer: 2
+  },
+  {
+    id: 19,
+    question: "Which of these keywords is used to define a constant variable?",
+    options: ["final", "const", "static", "immutable"],
+    correctAnswer: 0
+  },
+  {
+    id: 20,
+    question: "Which method can be used to compare two strings in Java?",
+    options: ["==", "equals()", "compare()", "compareTo()"],
+    correctAnswer: 1
+  }
   ],
-  // Add more subjects...
+  python:[
+
+    {
+    id: 1,
+    question: "Which keyword is used to define a function in Python?",
+    options: ["function", "def", "fun", "define"],
+    correctAnswer: 1
+  },
+  {
+    id: 2,
+    question: "What is the output of print(type([]))?",
+    options: ["<class 'list'>", "<class 'tuple'>", "<class 'dict'>", "<class 'set'>"],
+    correctAnswer: 0
+  },
+  {
+    id: 3,
+    question: "Which of the following is immutable in Python?",
+    options: ["list", "dict", "tuple", "set"],
+    correctAnswer: 2
+  },
+  {
+    id: 4,
+    question: "What is the correct syntax to create a dictionary?",
+    options: ["dict = {}", "dict = []", "dict = ()", "dict = <>"],
+    correctAnswer: 0
+  },
+  {
+    id: 5,
+    question: "Which operator is used for floor division in Python?",
+    options: ["/", "//", "%", "**"],
+    correctAnswer: 1
+  },
+  {
+    id: 6,
+    question: "How do you start a comment in Python?",
+    options: ["//", "#", "/*", "--"],
+    correctAnswer: 1
+  },
+  {
+    id: 7,
+    question: "Which keyword is used to handle exceptions?",
+    options: ["try", "catch", "except", "handle"],
+    correctAnswer: 2
+  },
+  {
+    id: 8,
+    question: "What does the len() function do?",
+    options: ["Returns the length of an object", "Returns the type of an object", "Converts to integer", "Deletes an object"],
+    correctAnswer: 0
+  },
+  {
+    id: 9,
+    question: "Which of the following is NOT a Python data type?",
+    options: ["int", "float", "real", "bool"],
+    correctAnswer: 2
+  },
+  {
+    id: 10,
+    question: "What will be the output of print(2**3)?",
+    options: ["6", "8", "9", "5"],
+    correctAnswer: 1
+  },
+  {
+    id: 11,
+    question: "How do you insert an element at the end of a list named 'lst'?",
+    options: ["lst.add()", "lst.append()", "lst.insert()", "lst.push()"],
+    correctAnswer: 1
+  },
+  {
+    id: 12,
+    question: "Which of the following functions can convert a string to a list of characters?",
+    options: ["list()", "str()", "tuple()", "char()"],
+    correctAnswer: 0
+  },
+  {
+    id: 13,
+    question: "What is the output of print('Hello' + 'World')?",
+    options: ["Hello World", "HelloWorld", "Hello+World", "Error"],
+    correctAnswer: 1
+  },
+  {
+    id: 14,
+    question: "Which keyword is used to create a class in Python?",
+    options: ["class", "def", "object", "struct"],
+    correctAnswer: 0
+  },
+  {
+    id: 15,
+    question: "How do you check for equality in Python?",
+    options: ["=", "==", "equals", "!="],
+    correctAnswer: 1
+  },
+  {
+    id: 16,
+    question: "Which built-in function can be used to get user input?",
+    options: ["input()", "scanf()", "read()", "get()"],
+    correctAnswer: 0
+  },
+  {
+    id: 17,
+    question: "What is the output of print(bool(''))?",
+    options: ["True", "False", "None", "Error"],
+    correctAnswer: 1
+  },
+  {
+    id: 18,
+    question: "Which module is commonly used for regular expressions in Python?",
+    options: ["regex", "re", "express", "pyregex"],
+    correctAnswer: 1
+  },
+  {
+    id: 19,
+    question: "What does the 'pass' statement do in Python?",
+    options: ["Exits a loop", "Does nothing", "Raises an error", "Returns a value"],
+    correctAnswer: 1
+  },
+  {
+    id: 20,
+    question: "Which of the following is a mutable data type?",
+    options: ["tuple", "string", "list", "int"],
+    correctAnswer: 2
+  }
+  ],
+
+  SQL:[
+
+    {
+    id: 1,
+    question: "Which SQL statement is used to retrieve data from a database?",
+    options: ["SELECT", "INSERT", "UPDATE", "DELETE"],
+    correctAnswer: 0
+  },
+  {
+    id: 2,
+    question: "Which command is used to add new records to a table?",
+    options: ["INSERT INTO", "UPDATE", "CREATE", "ALTER"],
+    correctAnswer: 0
+  },
+  {
+    id: 3,
+    question: "Which clause is used to filter the rows returned by a SELECT query?",
+    options: ["WHERE", "ORDER BY", "GROUP BY", "HAVING"],
+    correctAnswer: 0
+  },
+  {
+    id: 4,
+    question: "Which keyword is used to sort the result-set in ascending or descending order?",
+    options: ["ORDER BY", "GROUP BY", "SORT BY", "FILTER BY"],
+    correctAnswer: 0
+  },
+  {
+    id: 5,
+    question: "Which function is used to count the number of rows in SQL?",
+    options: ["COUNT()", "SUM()", "TOTAL()", "NUMBER()"],
+    correctAnswer: 0
+  },
+  {
+    id: 6,
+    question: "Which SQL statement is used to change existing data in a table?",
+    options: ["UPDATE", "MODIFY", "ALTER", "CHANGE"],
+    correctAnswer: 0
+  },
+  {
+    id: 7,
+    question: "Which keyword is used to remove duplicate rows in the result set?",
+    options: ["UNIQUE", "DISTINCT", "DIFFERENT", "FILTER"],
+    correctAnswer: 1
+  },
+  {
+    id: 8,
+    question: "Which command is used to remove all records from a table, but keep the table structure?",
+    options: ["DELETE", "DROP", "TRUNCATE", "REMOVE"],
+    correctAnswer: 2
+  },
+  {
+    id: 9,
+    question: "Which SQL clause groups rows that have the same values?",
+    options: ["GROUP BY", "ORDER BY", "HAVING", "WHERE"],
+    correctAnswer: 0
+  },
+  {
+    id: 10,
+    question: "Which statement is used to create a new table in SQL?",
+    options: ["CREATE TABLE", "NEW TABLE", "MAKE TABLE", "ADD TABLE"],
+    correctAnswer: 0
+  },
+  {
+    id: 11,
+    question: "What is the purpose of the JOIN operation in SQL?",
+    options: ["To combine rows from two or more tables", "To delete rows", "To sort data", "To create indexes"],
+    correctAnswer: 0
+  },
+  {
+    id: 12,
+    question: "Which type of JOIN returns all rows when there is a match in either left or right table?",
+    options: ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN"],
+    correctAnswer: 3
+  },
+  {
+    id: 13,
+    question: "What does the SQL keyword LIKE do?",
+    options: ["Filters rows based on pattern matching", "Checks equality", "Filters NULL values", "Sorts data"],
+    correctAnswer: 0
+  },
+  {
+    id: 14,
+    question: "Which of the following is a SQL constraint that uniquely identifies each record?",
+    options: ["PRIMARY KEY", "FOREIGN KEY", "UNIQUE", "CHECK"],
+    correctAnswer: 0
+  },
+  {
+    id: 15,
+    question: "What is the result of a DELETE statement without a WHERE clause?",
+    options: ["Deletes all records", "Deletes none", "Deletes first record", "Throws error"],
+    correctAnswer: 0
+  },
+  {
+    id: 16,
+    question: "Which command permanently removes a table and its data from the database?",
+    options: ["DELETE TABLE", "REMOVE TABLE", "DROP TABLE", "TRUNCATE TABLE"],
+    correctAnswer: 2
+  },
+  {
+    id: 17,
+    question: "Which SQL statement is used to change the structure of an existing table?",
+    options: ["ALTER TABLE", "MODIFY TABLE", "CHANGE TABLE", "UPDATE TABLE"],
+    correctAnswer: 0
+  },
+  {
+    id: 18,
+    question: "What does the HAVING clause do in SQL?",
+    options: ["Filters groups after aggregation", "Filters rows before grouping", "Sorts groups", "Joins tables"],
+    correctAnswer: 0
+  },
+  {
+    id: 19,
+    question: "Which function returns the average value of a numeric column?",
+    options: ["AVG()", "SUM()", "COUNT()", "MEAN()"],
+    correctAnswer: 0
+  },
+  {
+    id: 20,
+    question: "Which of these SQL commands can be used to add a new column to an existing table?",
+    options: ["ADD COLUMN", "INSERT COLUMN", "ALTER TABLE ADD", "UPDATE TABLE"],
+    correctAnswer: 2
+  }
+  ],
+
+  AI:[
+
+    {
+    id: 1,
+    question: "What is the primary goal of Artificial Intelligence?",
+    options: ["To build robots", "To simulate human intelligence", "To create databases", "To program computers"],
+    correctAnswer: 1
+  },
+  {
+    id: 2,
+    question: "Which of the following is a type of machine learning?",
+    options: ["Supervised learning", "Guided learning", "Unsupervised mining", "Directed learning"],
+    correctAnswer: 0
+  },
+  {
+    id: 3,
+    question: "Which algorithm is commonly used for classification problems?",
+    options: ["Linear Regression", "Decision Tree", "K-Means", "Apriori"],
+    correctAnswer: 1
+  },
+  {
+    id: 4,
+    question: "What does NLP stand for in AI?",
+    options: ["Natural Language Processing", "Neural Language Program", "Network Learning Protocol", "Natural Logic Programming"],
+    correctAnswer: 0
+  },
+  {
+    id: 5,
+    question: "What is overfitting in machine learning?",
+    options: ["When the model performs well on new data", "When the model performs poorly on training data", "When the model performs well on training data but poorly on new data", "When the model is too simple"],
+    correctAnswer: 2
+  },
+  {
+    id: 6,
+    question: "Which AI technique is inspired by the human brain?",
+    options: ["Genetic Algorithms", "Neural Networks", "Decision Trees", "Bayesian Networks"],
+    correctAnswer: 1
+  },
+  {
+    id: 7,
+    question: "Which of the following is NOT a part of AI?",
+    options: ["Machine Learning", "Deep Learning", "Computer Graphics", "Expert Systems"],
+    correctAnswer: 2
+  },
+  {
+    id: 8,
+    question: "What is reinforcement learning?",
+    options: ["Learning from labeled data", "Learning by trial and error through rewards and penalties", "Learning without any feedback", "Learning from explicit instructions"],
+    correctAnswer: 1
+  },
+  {
+    id: 9,
+    question: "Which algorithm is used for clustering?",
+    options: ["K-Means", "Naive Bayes", "Random Forest", "Support Vector Machine"],
+    correctAnswer: 0
+  },
+  {
+    id: 10,
+    question: "Which of these is a popular Python library for AI and machine learning?",
+    options: ["NumPy", "TensorFlow", "React", "Django"],
+    correctAnswer: 1
+  },
+  {
+    id: 11,
+    question: "What is the Turing Test designed to evaluate?",
+    options: ["Computer processing speed", "Human intelligence", "Whether a machine can exhibit intelligent behavior indistinguishable from a human", "Computer memory capacity"],
+    correctAnswer: 2
+  },
+  {
+    id: 12,
+    question: "Which AI concept refers to machines improving automatically through experience?",
+    options: ["Artificial General Intelligence", "Machine Learning", "Computer Vision", "Natural Language Processing"],
+    correctAnswer: 1
+  },
+  {
+    id: 13,
+    question: "What is the main purpose of a chatbot?",
+    options: ["To create graphics", "To interact with humans using natural language", "To store data", "To run simulations"],
+    correctAnswer: 1
+  },
+  {
+    id: 14,
+    question: "Which of the following is an example of unsupervised learning?",
+    options: ["Classification", "Regression", "Clustering", "Decision Trees"],
+    correctAnswer: 2
+  },
+  {
+    id: 15,
+    question: "Which term describes a simplified representation of a problem used to create an AI model?",
+    options: ["Algorithm", "Dataset", "Model", "Abstraction"],
+    correctAnswer: 3
+  },
+  {
+    id: 16,
+    question: "Which of these AI fields focuses on interpreting visual information?",
+    options: ["Natural Language Processing", "Computer Vision", "Robotics", "Expert Systems"],
+    correctAnswer: 1
+  },
+  {
+    id: 17,
+    question: "What is a neural network composed of?",
+    options: ["Nodes or neurons", "Decision trees", "Databases", "Rules and facts"],
+    correctAnswer: 0
+  },
+  {
+    id: 18,
+    question: "Which is NOT a characteristic of Artificial General Intelligence (AGI)?",
+    options: ["Can perform any intellectual task a human can", "Is highly specialized", "Has self-awareness", "Learns from experience"],
+    correctAnswer: 1
+  },
+  {
+    id: 19,
+    question: "Which AI approach uses rules and facts to simulate expert decision making?",
+    options: ["Expert Systems", "Genetic Algorithms", "Neural Networks", "Machine Learning"],
+    correctAnswer: 0
+  },
+  {
+    id: 20,
+    question: "Which of the following is an example of a popular AI programming language?",
+    options: ["Python", "HTML", "CSS", "SQL"],
+    correctAnswer: 0
+  }
+  ],
 };
 
 const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) => {
