@@ -30,18 +30,125 @@ interface ExamInterfaceProps {
 const sampleQuestions: { [key: string]: Question[] } = {
   networking: [
     {
-      id: 1,
-      question: "Which layer of the OSI model is responsible for routing?",
-      options: ["Physical Layer", "Data Link Layer", "Network Layer", "Transport Layer"],
-      correctAnswer: 2
-    },
-    {
-      id: 2,
-      question: "What is the default port number for HTTP?",
-      options: ["21", "23", "80", "443"],
-      correctAnswer: 2
-    },
-    // Add more questions as needed
+    id: 1,
+    question: "Which layer of the OSI model is responsible for routing?",
+    options: ["Physical Layer", "Data Link Layer", "Network Layer", "Transport Layer"],
+    correctAnswer: 2
+  },
+  {
+    id: 2,
+    question: "What is the default port number for HTTP?",
+    options: ["21", "23", "80", "443"],
+    correctAnswer: 2
+  },
+  {
+    id: 3,
+    question: "Which protocol is used to send emails?",
+    options: ["FTP", "SMTP", "SNMP", "HTTP"],
+    correctAnswer: 1
+  },
+  {
+    id: 4,
+    question: "Which IP class provides the maximum number of host addresses per network?",
+    options: ["Class A", "Class B", "Class C", "Class D"],
+    correctAnswer: 0
+  },
+  {
+    id: 5,
+    question: "What does DNS stand for?",
+    options: ["Data Network Service", "Digital Node System", "Domain Name System", "Distributed Network Setup"],
+    correctAnswer: 2
+  },
+  {
+    id: 6,
+    question: "Which device operates at the Data Link layer?",
+    options: ["Router", "Hub", "Switch", "Gateway"],
+    correctAnswer: 2
+  },
+  {
+    id: 7,
+    question: "What is the purpose of ARP?",
+    options: ["To translate IP addresses to MAC addresses", "To route data packets", "To assign IP addresses", "To encrypt data"],
+    correctAnswer: 0
+  },
+  {
+    id: 8,
+    question: "What is the maximum length of a MAC address?",
+    options: ["32 bits", "48 bits", "64 bits", "128 bits"],
+    correctAnswer: 1
+  },
+  {
+    id: 9,
+    question: "Which protocol is connection-oriented?",
+    options: ["UDP", "ICMP", "TCP", "IP"],
+    correctAnswer: 2
+  },
+  {
+    id: 10,
+    question: "Which protocol is used to retrieve emails from a server?",
+    options: ["SMTP", "POP3", "FTP", "IMAP"],
+    correctAnswer: 1
+  },
+  {
+    id: 11,
+    question: "What is the main function of the Transport layer?",
+    options: ["Routing", "End-to-end communication", "Framing", "MAC addressing"],
+    correctAnswer: 1
+  },
+  {
+    id: 12,
+    question: "Which of the following is a private IP address?",
+    options: ["192.168.1.1", "172.33.56.7", "8.8.8.8", "66.249.66.1"],
+    correctAnswer: 0
+  },
+  {
+    id: 13,
+    question: "Which topology has a central node?",
+    options: ["Ring", "Bus", "Mesh", "Star"],
+    correctAnswer: 3
+  },
+  {
+    id: 14,
+    question: "What is the function of a router?",
+    options: ["Amplify signals", "Forward packets between networks", "Convert digital to analog", "Assign MAC addresses"],
+    correctAnswer: 1
+  },
+  {
+    id: 15,
+    question: "Which port number is used for HTTPS?",
+    options: ["80", "21", "443", "110"],
+    correctAnswer: 2
+  },
+  {
+    id: 16,
+    question: "Which layer ensures reliable transmission of data segments?",
+    options: ["Network Layer", "Data Link Layer", "Transport Layer", "Session Layer"],
+    correctAnswer: 2
+  },
+  {
+    id: 17,
+    question: "IPv6 addresses are how many bits long?",
+    options: ["32", "64", "128", "256"],
+    correctAnswer: 2
+  },
+  {
+    id: 18,
+    question: "What does NAT stand for?",
+    options: ["Network Address Translation", "New Address Type", "Network Allocation Table", "Name Address Translator"],
+    correctAnswer: 0
+  },
+  {
+    id: 19,
+    question: "Which protocol is used to securely transfer files over the internet?",
+    options: ["FTP", "SFTP", "HTTP", "POP3"],
+    correctAnswer: 1
+  },
+  {
+    id: 20,
+    question: "Which device works on multiple layers of the OSI model?",
+    options: ["Hub", "Switch", "Router", "Repeater"],
+    correctAnswer: 2
+  },
   ],
   java: [
     {
@@ -231,7 +338,6 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
               
               <div className="flex gap-3">
                 <Button 
-                  variant="outline" 
                   onClick={onExit}
                   className="flex-1"
                 >
@@ -369,7 +475,6 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
           {/* Navigation Controls */}
           <div className="max-w-4xl mx-auto mt-6 flex justify-between items-center">
             <Button
-              variant="outline"
               onClick={prevQuestion}
               disabled={currentQuestion === 0}
               className="flex items-center space-x-2"
