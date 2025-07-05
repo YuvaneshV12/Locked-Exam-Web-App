@@ -643,6 +643,129 @@ const sampleQuestions: { [key: string]: Question[] } = {
     correctAnswer: 0
   }
   ],
+  dsa:[
+
+    {
+    id: 1,
+    question: "Which data structure uses FIFO (First In First Out)?",
+    options: ["Stack", "Queue", "Linked List", "Tree"],
+    correctAnswer: 1
+  },
+  {
+    id: 2,
+    question: "What is the time complexity of accessing an element in an array by index?",
+    options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
+    correctAnswer: 0
+  },
+  {
+    id: 3,
+    question: "Which traversal method uses Left, Root, Right order?",
+    options: ["Preorder", "Postorder", "Inorder", "Level Order"],
+    correctAnswer: 2
+  },
+  {
+    id: 4,
+    question: "What data structure is used for recursion?",
+    options: ["Queue", "Stack", "Heap", "Graph"],
+    correctAnswer: 1
+  },
+  {
+    id: 5,
+    question: "Which sorting algorithm has the best average-case time complexity?",
+    options: ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"],
+    correctAnswer: 2
+  },
+  {
+    id: 6,
+    question: "What is the maximum number of children a binary tree node can have?",
+    options: ["1", "2", "3", "Any number"],
+    correctAnswer: 1
+  },
+  {
+    id: 7,
+    question: "Which data structure is ideal for implementing priority queues?",
+    options: ["Heap", "Stack", "Queue", "Array"],
+    correctAnswer: 0
+  },
+  {
+    id: 8,
+    question: "Which algorithm technique divides the problem into smaller subproblems?",
+    options: ["Greedy", "Divide and Conquer", "Dynamic Programming", "Backtracking"],
+    correctAnswer: 1
+  },
+  {
+    id: 9,
+    question: "What is the worst-case time complexity of linear search?",
+    options: ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
+    correctAnswer: 1
+  },
+  {
+    id: 10,
+    question: "Which data structure uses key-value pairs?",
+    options: ["Array", "Hash Table", "Linked List", "Tree"],
+    correctAnswer: 1
+  },
+  {
+    id: 11,
+    question: "Which of these is a self-balancing binary search tree?",
+    options: ["Binary Tree", "AVL Tree", "Heap", "Trie"],
+    correctAnswer: 1
+  },
+  {
+    id: 12,
+    question: "What is the space complexity of recursive Fibonacci implementation?",
+    options: ["O(1)", "O(n)", "O(log n)", "O(n^2)"],
+    correctAnswer: 1
+  },
+  {
+    id: 13,
+    question: "Which traversal method visits nodes level by level?",
+    options: ["Inorder", "Preorder", "Postorder", "Level Order"],
+    correctAnswer: 3
+  },
+  {
+    id: 14,
+    question: "Which algorithm is used for finding the shortest path in a graph?",
+    options: ["Dijkstra’s Algorithm", "Kruskal’s Algorithm", "Prim’s Algorithm", "Depth First Search"],
+    correctAnswer: 0
+  },
+  {
+    id: 15,
+    question: "Which data structure is used in Depth First Search (DFS)?",
+    options: ["Queue", "Stack", "Heap", "Array"],
+    correctAnswer: 1
+  },
+  {
+    id: 16,
+    question: "What does a ‘heap’ data structure typically implement?",
+    options: ["Priority Queue", "Queue", "Stack", "Graph"],
+    correctAnswer: 0
+  },
+  {
+    id: 17,
+    question: "What is the worst-case time complexity of Quick Sort?",
+    options: ["O(n)", "O(n log n)", "O(log n)", "O(n^2)"],
+    correctAnswer: 3
+  },
+  {
+    id: 18,
+    question: "Which data structure stores elements in a contiguous block of memory?",
+    options: ["Linked List", "Array", "Tree", "Graph"],
+    correctAnswer: 1
+  },
+  {
+    id: 19,
+    question: "What is the main advantage of a doubly linked list over a singly linked list?",
+    options: ["Uses less memory", "Supports traversal in both directions", "Faster insertion", "Faster search"],
+    correctAnswer: 1
+  },
+  {
+    id: 20,
+    question: "What does ‘Big O’ notation describe?",
+    options: ["Space complexity", "Time complexity", "Algorithm efficiency", "Both time and space complexity"],
+    correctAnswer: 3
+  }
+  ]
 };
 
 const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) => {

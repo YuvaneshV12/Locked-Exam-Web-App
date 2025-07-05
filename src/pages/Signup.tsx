@@ -32,7 +32,7 @@ const Signup = () => {
 
     const data = await response.json();
     if (response.ok) {
-      navigate("");
+      navigate("/login");
     } else {
       alert(data.message || "Signup failed.");
     }
@@ -138,14 +138,6 @@ const Signup = () => {
                   Login here
                 </button>
               </p>
-            </div>
-            <div className="mt-4 text-center">
-              <Button
-                onClick={handleBackToHome}
-                className="text-white border-white/30 hover:bg-white/10 bg-transparent"
-              >
-                Back to Home
-              </Button>
             </div>
           </CardContent>
         </Card>

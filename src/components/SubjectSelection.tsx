@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Network, Code } from "lucide-react";
@@ -54,7 +53,14 @@ const subjects: Subject[] = [
   questions: 20,
   duration: 20
   },
-
+  {
+  id: 'dsa',
+  name: 'Data Structures & Algorithms',
+  description: 'Arrays, Linked Lists, Trees, Sorting, Searching',
+  icon: <Code className="w-8 h-8" />,
+  questions: 20,
+  duration: 20
+  },
 ];
 
 interface SubjectSelectionProps {
@@ -84,7 +90,7 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
             <div className="flex gap-3">
               <Button 
                 onClick={handleLogin}
-                className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white"
               >
                 Login
               </Button>
