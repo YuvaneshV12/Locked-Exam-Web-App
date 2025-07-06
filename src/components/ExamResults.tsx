@@ -74,7 +74,7 @@ const ExamResults = ({
 
           <Card className="text-center bg-white/80 backdrop-blur-sm">
             <CardContent className="pt-6">
-              <div className="text-4xl font-bold text-indigo-600 mb-2">
+              <div className="text-4xl font-bold text-green-600 mb-2">
                 {score}
               </div>
               <div className="text-lg text-gray-600 mb-1">
@@ -154,7 +154,7 @@ const ExamResults = ({
                 <div className="text-2xl font-bold text-red-600">{totalQuestions - score}</div>
                 <div className="text-sm text-red-700">Incorrect</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-center p-4 bg-gray-100 rounded-lg">
                 <div className="text-2xl font-bold text-gray-600">{totalQuestions}</div>
                 <div className="text-sm text-gray-700">Total</div>
               </div>
@@ -181,7 +181,7 @@ const ExamResults = ({
           <Button
             onClick={onBackToHome}
             size="lg"
-            className="bg-indigo-600 hover:bg-indigo-700 flex items-center space-x-2"
+            className="bg-sky-600 hover:bg-sky-700 flex items-center space-x-2"
           >
             <Home className="w-5 h-5" />
             <span>Back to Home</span>
@@ -192,6 +192,17 @@ const ExamResults = ({
         <div className="mt-8 text-center text-sm text-gray-600">
           <p>Results are automatically saved. Share your achievement with friends!</p>
         </div>
+        <div className="w-full text-indigo-600 text-center py-1 mt-8 mb-2">
+            Developed by{" "}
+            <a
+              href="https://www.linkedin.com/in/yuvanesh-v-78730b32a"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-lg underline hover:text-indigo-900 transition"
+            >
+              Yuvanesh V
+            </a>
+          </div>
       </div>
     </div>
   );

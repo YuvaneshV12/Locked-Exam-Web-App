@@ -920,7 +920,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
 
   if (!examStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-white flex items-center justify-center px-6 py-6">
         <Card className="max-w-2xl w-full bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-gray-900">
