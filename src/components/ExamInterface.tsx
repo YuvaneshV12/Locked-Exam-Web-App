@@ -857,7 +857,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        toast.error("Tab switch detected. Submitting exam.");
+        toast.error("Tab switch detected. Exam Submitted.");
         handleSubmit();
       }
     };
@@ -898,6 +898,22 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   const goToQuestion = (index: number) => {
     setCurrentQuestion(index);
   };
+
+  // Detect fullscreen exit and submit the exam
+    useEffect(() => {
+      const handleFullscreenExit = () => {
+        if (!document.fullscreenElement && examStarted) {
+          toast.error("Fullscreen exited! Submitting exam.");
+          handleSubmit();
+        }
+      };
+
+      document.addEventListener("fullscreenchange", handleFullscreenExit);
+
+      return () => {
+        document.removeEventListener("fullscreenchange", handleFullscreenExit);
+      };
+    }, [examStarted, handleSubmit]);
 
   const answeredQuestions = answers.filter(answer => answer !== -1).length;
   const progress = (answeredQuestions / 20) * 100;
