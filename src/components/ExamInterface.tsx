@@ -830,7 +830,6 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     onExamComplete(answers, timeSpent, score);
   }, [answers, timeLeft, subject.duration, calculateScore, exitFullscreen, onExamComplete]);
 
-  // Timer effect
   useEffect(() => {
     if (!examStarted) return;
 
@@ -847,18 +846,19 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     return () => clearInterval(timer);
   }, [examStarted, handleSubmit]);
 
-  // Prevent navigation away
   useEffect(() => {
     if (!examStarted) return;
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      handleSubmit(); 
       e.preventDefault();
       e.returnValue = '';
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        toast.error("Warning: Tab switching detected!");
+        toast.error("Tab switch detected. Submitting exam.");
+        handleSubmit();
       }
     };
 
