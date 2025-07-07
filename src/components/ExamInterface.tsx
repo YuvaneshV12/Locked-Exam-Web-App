@@ -21,6 +21,7 @@ interface Subject {
 }
 
 interface ExamInterfaceProps {
+  userId: number;
   subject: Subject;
   onExamComplete: (answers: number[], timeSpent: number, score: number) => void;
   onExit: () => void;
@@ -828,18 +829,25 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   const timeSpent = (subject.duration * 60) - timeLeft;
 
   // Submit to backend
-  try {
-    await fetch("http://localhost:5000/api/submit-score", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: 1,
-        subjectName:subjectName,
-        subjectId: subject.id,
-        score,
-        timeSpent
-      })
-    });
+  const storedUserId = localStorage.getItem("userId");
+const userId = storedUserId ? Number(storedUserId) : null;
+
+try {
+  if (!userId) {
+    throw new Error("User not logged in");
+  }
+
+  await fetch("http://localhost:5000/api/submit-score", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId,             // use dynamic userId here
+      subjectName,
+      subjectId: subject.id,
+      score,
+      timeSpent
+    }),
+  });
     //toast.success("Score submitted successfully");
   } catch (err) {
     toast.error("Failed to submit score");
