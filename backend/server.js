@@ -23,19 +23,21 @@ db.connect((err) => {
   console.log("Connected to MySQL DB");
 });
 
-app.post("/api/submit-score", async (req, res) => {
-  const { userId, subjectId, score, timeSpent } = req.body;
+app.post("/api/submit-score", (req, res) => {
+  const { userId, subjectId, subjectName, score, timeSpent } = req.body;
 
-  try {
-    await db.execute(
-      "INSERT INTO exam_results (user_id, subject_id, score, time_spent) VALUES (?, ?, ?, ?)",
-      [userId, subjectId, score, timeSpent]
-    );
-    res.status(200).json({ message: "Score saved successfully!" });
-  } catch (error) {
-    console.error("Error saving score:", error);
-    res.status(500).json({ error: "Failed to save score" });
-  }
+  const sql = `
+    INSERT INTO exam_results (user_id, subject_id, subject_name, score, time_spent)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [userId, subjectId, subjectName, score, timeSpent], (err, result) => {
+    if (err) {
+      console.error("Error submitting score:", err);
+      return res.status(500).json({ message: "Failed to submit score" });
+    }
+    res.status(200).json({ message: "Score submitted successfully" });
+  });
 });
 
     app.get("/api/fetch-scores/:userId", (req, res) => {

@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { BarChart3, BookOpen, Home } from "lucide-react";
+import { BarChart3, BookOpen, Home,LogIn,UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Score {
@@ -45,6 +45,8 @@ const ExamScore = () => {
   }, [userId, navigate]);
 
   const handleHome = () => navigate("/subjectselection");
+  const handleLogin = () => navigate("/login");
+  const handleSignIn = () => navigate("/signup");
 
   return (
     <div className="flex min-h-screen">
@@ -68,6 +70,20 @@ const ExamScore = () => {
           >
             <BarChart3 className="w-5 h-5 mr-3" />
             My Score
+          </button>
+          <button
+            onClick={handleLogin}
+            className="flex items-center px-4 py-2 text-sky-700 hover:bg-sky-100 w-full rounded-lg transition"
+          >
+            <LogIn className="w-5 h-5 mr-3" />
+            Login
+          </button>
+          <button
+            onClick={handleSignIn}
+            className="flex items-center px-4 py-2 text-sky-700 hover:bg-sky-100 w-full rounded-lg transition"
+          >
+            <UserPlus className="w-5 h-5 mr-3" />
+            SignUp
           </button>
         </nav>
       </div>
@@ -98,9 +114,9 @@ const ExamScore = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-sky-700 space-y-2">
-                    <p>Course: <span className="font-semibold">{score.subject_id}/20</span></p>
+                    <p>Subject: <span className="font-semibold">{score.subject_id}</span></p>
                     <p>Score: <span className="font-semibold">{score.score}/20</span></p>
-                    <p>Time Spent: <span className="font-semibold">{score.time_spent} mins</span></p>
+                    <p>Time Spent:{" "}<span className="font-semibold">{Math.floor(score.time_spent / 60)} mins {score.time_spent % 60} secs</span></p>
                   </CardContent>
                 </Card>
               ))

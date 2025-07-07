@@ -28,7 +28,7 @@ interface ExamInterfaceProps {
 
 // Sample questions for demo - in real app, these would come from backend
 const sampleQuestions: { [key: string]: Question[] } = {
-  networking: [
+  Networking: [
     {
     id: 1,
     question: "Which layer of the OSI model is responsible for routing?",
@@ -150,7 +150,7 @@ const sampleQuestions: { [key: string]: Question[] } = {
     correctAnswer: 2
   },
   ],
-  java: [
+  Java: [
     {
     id: 1,
     question: "Which keyword is used to inherit a class in Java?",
@@ -272,7 +272,7 @@ const sampleQuestions: { [key: string]: Question[] } = {
     correctAnswer: 1
   }
   ],
-  python:[
+  Python:[
 
     {
     id: 1,
@@ -643,7 +643,7 @@ const sampleQuestions: { [key: string]: Question[] } = {
     correctAnswer: 0
   }
   ],
-  dsa:[
+  DSA:[
 
     {
     id: 1,
@@ -774,6 +774,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   const [timeLeft, setTimeLeft] = useState(subject.duration * 60); // Convert to seconds
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
+  const [subjectName] = useState(subject.name);
   const [questions] = useState<Question[]>(
     sampleQuestions[subject.id] || Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
@@ -833,12 +834,13 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: 1,
+        subjectName:subjectName,
         subjectId: subject.id,
         score,
         timeSpent
       })
     });
-    toast.success("Score submitted successfully");
+    //toast.success("Score submitted successfully");
   } catch (err) {
     toast.error("Failed to submit score");
     console.error(err);
@@ -846,7 +848,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
 
   await exitFullscreen();
   onExamComplete(answers, timeSpent, score);
-}, [answers, timeLeft, subject.id, calculateScore, exitFullscreen, onExamComplete]);
+}, [answers, timeLeft, subject.id, subjectName, calculateScore, exitFullscreen, onExamComplete]);
 
   useEffect(() => {
     if (!examStarted) return;

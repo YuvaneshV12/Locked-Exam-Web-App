@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   BookOpen,
   Network,
-  Code,
   Code2,
   TreePine,
   BarChart3,
@@ -17,6 +16,8 @@ import {
   Brain,
   Cpu,
   Home,
+  LogIn,
+  UserPlus
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,7 +32,7 @@ interface Subject {
 
 const subjects: Subject[] = [
   {
-    id: 'networking',
+    id: 'Networking',
     name: 'Computer Networking',
     description: 'TCP/IP, OSI Model, Network Protocols, Security',
     icon: <Network className="w-8 h-8" />,
@@ -39,7 +40,7 @@ const subjects: Subject[] = [
     duration: 20,
   },
   {
-    id: 'java',
+    id: 'Java',
     name: 'Java Programming',
     description: 'OOP, Collections, Multithreading, Spring Framework',
     icon: <Cpu className="w-8 h-8" />,
@@ -47,7 +48,7 @@ const subjects: Subject[] = [
     duration: 20,
   },
   {
-    id: 'python',
+    id: 'Python',
     name: 'Python Programming',
     description: 'Syntax, Data Types, Functions, OOP, Libraries',
     icon: <Code2 className="w-8 h-8" />,
@@ -71,7 +72,7 @@ const subjects: Subject[] = [
     duration: 20,
   },
   {
-    id: 'dsa',
+    id: 'DSA',
     name: 'Data Structures & Algorithms',
     description: 'Arrays, Linked Lists, Trees, Sorting, Searching',
     icon: <TreePine className="w-8 h-8" />,
@@ -89,6 +90,8 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
 
   const handleHome = () => navigate("/subjectselection");
   const handleScore = () => navigate("/examscore");
+  const handleLogin = () => navigate("/login");
+  const handleSignIn = () => navigate("/signup");
 
   return (
     <div className="flex min-h-screen">
@@ -112,6 +115,20 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
           >
             <BarChart3 className="w-5 h-5 mr-3" />
             My Score
+          </button>
+          <button
+            onClick={handleLogin}
+            className="flex items-center px-4 py-2 text-sky-700 hover:bg-sky-100 w-full rounded-lg transition"
+          >
+            <LogIn className="w-5 h-5 mr-3" />
+            Login
+          </button>
+          <button
+            onClick={handleSignIn}
+            className="flex items-center px-4 py-2 text-sky-700 hover:bg-sky-100 w-full rounded-lg transition"
+          >
+            <UserPlus className="w-5 h-5 mr-3" />
+            SignUp
           </button>
         </nav>
       </div>
