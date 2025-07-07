@@ -823,12 +823,30 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   }, [answers, questions]);
 
   const handleSubmit = useCallback(async () => {
-    const score = calculateScore();
-    const timeSpent = (subject.duration * 60) - timeLeft;
-    
-    await exitFullscreen();
-    onExamComplete(answers, timeSpent, score);
-  }, [answers, timeLeft, subject.duration, calculateScore, exitFullscreen, onExamComplete]);
+  const score = calculateScore();
+  const timeSpent = (subject.duration * 60) - timeLeft;
+
+  // Submit to backend
+  try {
+    await fetch("http://localhost:5000/api/submit-score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: 1,
+        subjectId: subject.id,
+        score,
+        timeSpent
+      })
+    });
+    toast.success("Score submitted successfully");
+  } catch (err) {
+    toast.error("Failed to submit score");
+    console.error(err);
+  }
+
+  await exitFullscreen();
+  onExamComplete(answers, timeSpent, score);
+}, [answers, timeLeft, subject.id, calculateScore, exitFullscreen, onExamComplete]);
 
   useEffect(() => {
     if (!examStarted) return;
@@ -945,24 +963,24 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="bg-gray-50 p-3 rounded">
                   <div className="font-semibold">Questions</div>
-                  <div className="text-lg text-indigo-600">{subject.questions}</div>
+                  <div className="text-lg text-sky-600">{subject.questions}</div>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
                   <div className="font-semibold">Duration</div>
-                  <div className="text-lg text-indigo-600">{subject.duration} min</div>
+                  <div className="text-lg text-sky-600">{subject.duration} min</div>
                 </div>
               </div>
               
               <div className="flex gap-3">
                 <Button 
                   onClick={onExit}
-                  className="flex-1"
+                  className="flex-1 bg-blue-400 hover:bg-blue-700"
                 >
                   Cancel
                 </Button>
                 <Button 
                   onClick={handleExamStart}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700"
+                  className="flex-1 bg-sky-400 hover:bg-sky-700"
                 >
                   Start Exam
                 </Button>
@@ -1017,9 +1035,9 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
                 className={`
                   w-10 h-10 rounded text-sm font-medium transition-colors
                   ${currentQuestion === index 
-                    ? 'bg-indigo-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : answers[index] !== -1 
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                      ? 'bg-green-200 text-green-700 hover:bg-green-200' 
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }
                 `}
@@ -1031,7 +1049,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
           
           <div className="mt-6 space-y-2 text-sm">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-green-100 rounded"></div>
+              <div className="w-4 h-4 bg-green-200 rounded"></div>
               <span>Answered</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -1039,7 +1057,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
               <span>Not Answered</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-indigo-600 rounded"></div>
+              <div className="w-4 h-4 bg-blue-600 rounded"></div>
               <span>Current</span>
             </div>
           </div>
@@ -1066,7 +1084,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
                     className={`
                       w-full text-left p-4 rounded-lg border-2 transition-all
                       ${answers[currentQuestion] === index
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
+                        ? 'border-sky-500 bg-sky-50 text-sky-900'
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }
                     `}
@@ -1075,7 +1093,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
                       <div className={`
                         w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-medium
                         ${answers[currentQuestion] === index
-                          ? 'border-indigo-500 bg-indigo-500 text-white'
+                          ? 'border-sky-500 bg-sky-500 text-white'
                           : 'border-gray-300'
                         }
                       `}>
@@ -1094,7 +1112,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
             <Button
               onClick={prevQuestion}
               disabled={currentQuestion === 0}
-              className="flex items-center space-x-2"
+              className="flex items-center bg-blue-400 hover:bg-blue-700 space-x-2"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Previous</span>
@@ -1112,7 +1130,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
               ) : (
                 <Button
                   onClick={nextQuestion}
-                  className="flex items-center space-x-2"
+                  className="flex items-center bg-sky-400 hover:bg-sky-700 space-x-2"
                 >
                   <span>Next</span>
                   <ChevronRight className="w-4 h-4" />

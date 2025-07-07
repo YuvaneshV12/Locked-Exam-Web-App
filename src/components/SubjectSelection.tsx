@@ -10,7 +10,12 @@ import {
   BookOpen,
   Network,
   Code,
+  Code2,
+  TreePine,
   BarChart3,
+  Database,
+  Brain,
+  Cpu,
   Home,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +42,7 @@ const subjects: Subject[] = [
     id: 'java',
     name: 'Java Programming',
     description: 'OOP, Collections, Multithreading, Spring Framework',
-    icon: <Code className="w-8 h-8" />,
+    icon: <Cpu className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
@@ -45,7 +50,7 @@ const subjects: Subject[] = [
     id: 'python',
     name: 'Python Programming',
     description: 'Syntax, Data Types, Functions, OOP, Libraries',
-    icon: <Code className="w-8 h-8" />,
+    icon: <Code2 className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
@@ -53,7 +58,7 @@ const subjects: Subject[] = [
     id: 'AI',
     name: 'Artificial Intelligence',
     description: 'Machine Learning, NLP, Neural Networks, Robotics',
-    icon: <Code className="w-8 h-8" />,
+    icon: <Brain className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
@@ -61,7 +66,7 @@ const subjects: Subject[] = [
     id: 'SQL',
     name: 'SQL Database',
     description: 'Queries, Joins, Transactions, Database Design',
-    icon: <Code className="w-8 h-8" />,
+    icon: <Database className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
@@ -69,7 +74,7 @@ const subjects: Subject[] = [
     id: 'dsa',
     name: 'Data Structures & Algorithms',
     description: 'Arrays, Linked Lists, Trees, Sorting, Searching',
-    icon: <Code className="w-8 h-8" />,
+    icon: <TreePine className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
@@ -83,7 +88,7 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
   const navigate = useNavigate();
 
   const handleHome = () => navigate("/subjectselection");
-  const handleScore = () => navigate("/score");
+  const handleScore = () => navigate("/examscore");
 
   return (
     <div className="flex min-h-screen">

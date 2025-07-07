@@ -11,34 +11,35 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const response = await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok) {
-        navigate("/subjectselection");
-      } else if (data.message === "User not found") {
-        alert("User not found. Please sign up first.");
-        navigate("/signup");
-      } else if (data.message === "Invalid credentials") {
-        alert("Incorrect email or password.");
-      } else {
-        alert("Something went wrong.");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      alert("Server error.");
+    if (response.ok) {
+      localStorage.setItem("userId", data.user.id); // or data.userId based on backend
+      navigate("/subjectselection");
+    } else if (data.message === "User not found") {
+      alert("User not found. Please sign up first.");
+      navigate("/signup");
+    } else if (data.message === "Invalid credentials") {
+      alert("Incorrect email or password.");
+    } else {
+      alert("Something went wrong.");
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Server error.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-6 py-6">
