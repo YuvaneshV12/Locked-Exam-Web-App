@@ -40,14 +40,14 @@ app.post("/api/submit-score", (req, res) => {
   });
 });
 
-    app.get("/api/fetch-scores/:userId", (req, res) => {
-      const { userId } = req.params;
-      const sql = `
-      SELECT id, subject_id, subject_name, score, time_spent, created_at
-      FROM exam_results
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-    `;
+  app.get("/api/fetch-scores/:userId", (req, res) => {
+    const { userId } = req.params;
+    const sql = `
+    SELECT id, subject_id, subject_name, score, time_spent, created_at
+    FROM exam_results
+    WHERE user_id = ?
+    ORDER BY created_at DESC
+  `;
 
   db.query(sql, [userId], (err, results) => {
     if (err) {
