@@ -29,7 +29,7 @@ db.connect((err) => {
     console.error("Error Details:", err.message);
     return;
   }
-  console.log("✅ Connected to MySQL DB successfully!");
+  console.log("✅ Connected to MySQL DB successfully");
 });
 
 app.post("/api/submit-score", (req, res) => {
