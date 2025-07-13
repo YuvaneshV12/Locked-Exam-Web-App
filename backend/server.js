@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables from .env
 
 const app = express();
 const PORT = 5000;
@@ -8,19 +11,25 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+// MySQL connection using Clever Cloud env variables
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Gova@12345",
-  database: "donotdelete",
+  host: process.env.MYSQL_ADDON_HOST,
+  user: process.env.MYSQL_ADDON_USER,
+  password: process.env.MYSQL_ADDON_PASSWORD,
+  database: process.env.MYSQL_ADDON_DB,
+  port: process.env.MYSQL_ADDON_PORT,
 });
 
 db.connect((err) => {
   if (err) {
-    console.error("MySQL connection error:", err);
+    console.error("❌ MySQL connection failed:");
+    console.error("Host:", process.env.MYSQL_ADDON_HOST);
+    console.error("User:", process.env.MYSQL_ADDON_USER);
+    console.error("Database:", process.env.MYSQL_ADDON_DB);
+    console.error("Error Details:", err.message);
     return;
   }
-  console.log("Connected to MySQL DB");
+  console.log("✅ Connected to MySQL DB successfully!");
 });
 
 app.post("/api/submit-score", (req, res) => {
@@ -40,9 +49,9 @@ app.post("/api/submit-score", (req, res) => {
   });
 });
 
-  app.get("/api/fetch-scores/:userId", (req, res) => {
-    const { userId } = req.params;
-    const sql = `
+app.get("/api/fetch-scores/:userId", (req, res) => {
+  const { userId } = req.params;
+  const sql = `
     SELECT id, subject_id, subject_name, score, time_spent, created_at
     FROM exam_results
     WHERE user_id = ?
