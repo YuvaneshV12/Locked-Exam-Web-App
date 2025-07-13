@@ -17,9 +17,12 @@ import {
   Cpu,
   Home,
   LogIn,
-  UserPlus
+  UserPlus,
+  Menu,
+  X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface Subject {
   id: string;
@@ -32,49 +35,49 @@ interface Subject {
 
 const subjects: Subject[] = [
   {
-    id: 'Networking',
-    name: 'Computer Networking',
-    description: 'TCP/IP, OSI Model, Network Protocols, Security',
+    id: "Networking",
+    name: "Computer Networking",
+    description: "TCP/IP, OSI Model, Network Protocols, Security",
     icon: <Network className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
   {
-    id: 'Java',
-    name: 'Java Programming',
-    description: 'OOP, Collections, Multithreading, Spring Framework',
+    id: "Java",
+    name: "Java Programming",
+    description: "OOP, Collections, Multithreading, Spring Framework",
     icon: <Cpu className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
   {
-    id: 'Python',
-    name: 'Python Programming',
-    description: 'Syntax, Data Types, Functions, OOP, Libraries',
+    id: "Python",
+    name: "Python Programming",
+    description: "Syntax, Data Types, Functions, OOP, Libraries",
     icon: <Code2 className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
   {
-    id: 'AI',
-    name: 'Artificial Intelligence',
-    description: 'Machine Learning, NLP, Neural Networks, Robotics',
+    id: "AI",
+    name: "Artificial Intelligence",
+    description: "Machine Learning, NLP, Neural Networks, Robotics",
     icon: <Brain className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
   {
-    id: 'SQL',
-    name: 'SQL Database',
-    description: 'Queries, Joins, Transactions, Database Design',
+    id: "SQL",
+    name: "SQL Database",
+    description: "Queries, Joins, Transactions, Database Design",
     icon: <Database className="w-8 h-8" />,
     questions: 20,
     duration: 20,
   },
   {
-    id: 'DSA',
-    name: 'Data Structures & Algorithms',
-    description: 'Arrays, Linked Lists, Trees, Sorting, Searching',
+    id: "DSA",
+    name: "Data Structures & Algorithms",
+    description: "Arrays, Linked Lists, Trees, Sorting, Searching",
     icon: <TreePine className="w-8 h-8" />,
     questions: 20,
     duration: 20,
@@ -87,6 +90,7 @@ interface SubjectSelectionProps {
 
 const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleHome = () => navigate("/subjectselection");
   const handleScore = () => navigate("/examscore");
@@ -94,10 +98,28 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
   const handleSignIn = () => navigate("/signup");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Mobile Toggle Button */}
+      <div className="md:hidden flex justify-between items-center px-4 py-4 bg-white shadow-md">
+        <div className="flex items-center">
+          <BookOpen className="w-8 h-8 text-sky-600 mr-2" />
+          <span className="text-xl font-bold text-sky-800">TechExamHub</span>
+        </div>
+        <button
+          className="text-sky-700"
+          onClick={() => setIsSidebarOpen((prev) => !prev)}
+        >
+          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
       {/* Sidebar */}
-      <div className="w-60 bg-white border-r shadow-lg py-8 px-4 flex flex-col items-center">
-        <div className="flex items-center mb-10">
+      <div
+        className={`${
+          isSidebarOpen ? "block" : "hidden"
+        } md:block w-full md:w-60 bg-white border-r shadow-lg py-8 px-4 z-20 md:relative absolute`}
+      >
+        <div className="hidden md:flex items-center mb-10">
           <BookOpen className="w-8 h-8 text-sky-600 mr-2" />
           <span className="text-xl font-bold text-sky-800">TechExamHub</span>
         </div>
@@ -134,20 +156,20 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 px-6 py-8">
+      <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 px-4 sm:px-6 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
-          <BookOpen className="w-12 h-12 text-sky-600 mr-4" />
-          <h1 className="text-5xl font-extrabold text-sky-800">TechExamHub</h1>
-        </div>
-            <p className="text-xl text-sky-700 max-w-2xl mx-auto">
+              <BookOpen className="w-12 h-12 text-sky-600 mr-4" />
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-sky-800">TechExamHub</h1>
+            </div>
+            <p className="text-lg sm:text-xl text-sky-700 max-w-2xl mx-auto">
               Test your technical knowledge with our comprehensive exam platform.
               Choose your domain and challenge yourself with 20 carefully curated questions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {subjects.map((subject) => (
               <Card
                 key={subject.id}
