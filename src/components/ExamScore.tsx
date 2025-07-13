@@ -29,7 +29,7 @@ const ExamScore = () => {
     const fetchScores = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/fetch-scores/${userId}`
+          `https://locked-exam-web-app.onrender.com/api/fetch-scores/${userId}`
         );
         setScores(res.data);
       } catch (err) {

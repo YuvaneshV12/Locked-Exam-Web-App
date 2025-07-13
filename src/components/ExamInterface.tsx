@@ -837,7 +837,7 @@ try {
     throw new Error("User not logged in");
   }
 
-  await fetch("http://localhost:5000/api/submit-score", {
+  await fetch("https://locked-exam-web-app.onrender.com/api/submit-score", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
