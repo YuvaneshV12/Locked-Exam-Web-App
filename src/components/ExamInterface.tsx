@@ -1,8 +1,6 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Clock, ChevronLeft, ChevronRight, Flag, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -772,7 +770,7 @@ const sampleQuestions: { [key: string]: Question[] } = {
 const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>(new Array(20).fill(-1));
-  const [timeLeft, setTimeLeft] = useState(subject.duration * 60); // Convert to seconds
+  const [timeLeft, setTimeLeft] = useState(subject.duration * 60); // seconds
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
   const [subjectName] = useState(subject.name);
@@ -781,7 +779,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
       id: i + 1,
       question: `Sample question ${i + 1} for ${subject.name}?`,
       options: ["Option A", "Option B", "Option C", "Option D"],
-      correctAnswer: 0
+      correctAnswer: 0,
     }))
   );
 
@@ -825,38 +823,35 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   }, [answers, questions]);
 
   const handleSubmit = useCallback(async () => {
-  const score = calculateScore();
-  const timeSpent = (subject.duration * 60) - timeLeft;
+    const score = calculateScore();
+    const timeSpent = subject.duration * 60 - timeLeft;
 
-  // Submit to backend
-  const storedUserId = localStorage.getItem("userId");
-const userId = storedUserId ? Number(storedUserId) : null;
+    const storedUserId = localStorage.getItem("userId");
+    const userId = storedUserId ? Number(storedUserId) : null;
 
-try {
-  if (!userId) {
-    throw new Error("User not logged in");
-  }
+    try {
+      if (!userId) throw new Error("User not logged in");
 
-  await fetch("https://locked-exam-web-app.onrender.com/api/submit-score", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId,             // use dynamic userId here
-      subjectName,
-      subjectId: subject.id,
-      score,
-      timeSpent
-    }),
-  });
-    //toast.success("Score submitted successfully");
-  } catch (err) {
-    toast.error("Failed to submit score");
-    console.error(err);
-  }
+      await fetch("https://locked-exam-web-app.onrender.com/api/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          subjectName,
+          subjectId: subject.id,
+          score,
+          timeSpent,
+        }),
+      });
+      //toast.success("Score submitted successfully");
+    } catch (err) {
+      toast.error("Failed to submit score");
+      console.error(err);
+    }
 
-  await exitFullscreen();
-  onExamComplete(answers, timeSpent, score);
-}, [answers, timeLeft, subject.id, subjectName, calculateScore, exitFullscreen, onExamComplete]);
+    await exitFullscreen();
+    onExamComplete(answers, timeSpent, score);
+  }, [answers, timeLeft, subject.id, subjectName, calculateScore, exitFullscreen, onExamComplete]);
 
   useEffect(() => {
     if (!examStarted) return;
@@ -878,9 +873,9 @@ try {
     if (!examStarted) return;
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      handleSubmit(); 
+      handleSubmit();
       e.preventDefault();
-      e.returnValue = '';
+      e.returnValue = "";
     };
 
     const handleVisibilityChange = () => {
@@ -890,19 +885,34 @@ try {
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [examStarted]);
+  }, [examStarted, handleSubmit]);
+
+  useEffect(() => {
+    const handleFullscreenExit = () => {
+      if (!document.fullscreenElement && examStarted) {
+        toast.error("Fullscreen exited! Submitting exam.");
+        handleSubmit();
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenExit);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenExit);
+    };
+  }, [examStarted, handleSubmit]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleAnswerSelect = (optionIndex: number) => {
@@ -927,29 +937,12 @@ try {
     setCurrentQuestion(index);
   };
 
-  // Detect fullscreen exit and submit the exam
-    useEffect(() => {
-      const handleFullscreenExit = () => {
-        if (!document.fullscreenElement && examStarted) {
-          toast.error("Fullscreen exited! Submitting exam.");
-          handleSubmit();
-        }
-      };
-
-      document.addEventListener("fullscreenchange", handleFullscreenExit);
-
-      return () => {
-        document.removeEventListener("fullscreenchange", handleFullscreenExit);
-      };
-    }, [examStarted, handleSubmit]);
-
-  const answeredQuestions = answers.filter(answer => answer !== -1).length;
-  const progress = (answeredQuestions / 20) * 100;
+  const answeredQuestions = answers.filter((answer) => answer !== -1).length;
 
   if (!examStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-white flex items-center justify-center px-6 py-6">
-        <Card className="max-w-2xl w-full bg-white/95 backdrop-blur-sm">
+      <div className="min-h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-white flex items-center justify-center px-4 py-6">
+        <Card className="max-w-md sm:max-w-2xl w-full bg-white/95 backdrop-blur-sm mx-2">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-gray-900">
               Ready to Start: {subject.name}
@@ -968,7 +961,7 @@ try {
                 <li>• Exam will auto-submit when time expires</li>
               </ul>
             </div>
-            
+
             <div className="text-center space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="bg-gray-50 p-3 rounded">
@@ -980,18 +973,12 @@ try {
                   <div className="text-lg text-sky-600">{subject.duration} min</div>
                 </div>
               </div>
-              
+
               <div className="flex gap-3">
-                <Button 
-                  onClick={onExit}
-                  className="flex-1 bg-blue-400 hover:bg-blue-700"
-                >
+                <Button onClick={onExit} className="flex-1 bg-blue-400 hover:bg-blue-700">
                   Cancel
                 </Button>
-                <Button 
-                  onClick={handleExamStart}
-                  className="flex-1 bg-sky-400 hover:bg-sky-700"
-                >
+                <Button onClick={handleExamStart} className="flex-1 bg-sky-400 hover:bg-sky-700">
                   Start Exam
                 </Button>
               </div>
@@ -1008,47 +995,40 @@ try {
       <div className="bg-white shadow-sm border-b px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold text-gray-900">{subject.name}</h1>
-            <div className="text-sm text-gray-500">
+            <h1 className="text-lg md:text-xl font-semibold text-gray-900">{subject.name}</h1>
+            <div className="text-xs md:text-sm text-gray-500">
               Question {currentQuestion + 1} of {questions.length}
             </div>
           </div>
-          
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2 text-lg font-mono">
-              <Clock className="w-5 h-5 text-red-500" />
-              <span className={`${timeLeft < 300 ? 'text-red-500' : 'text-gray-700'}`}>
+          <div className="flex items-center space-x-4 text-sm md:text-base">
+            <div className="flex items-center space-x-1 font-mono text-red-500">
+              <Clock className="w-4 h-4 md:w-5 md:h-5" />
+              <span className={`${timeLeft < 300 ? "text-red-500" : "text-gray-700"}`}>
                 {formatTime(timeLeft)}
               </span>
             </div>
-            
-            <div className="text-sm text-gray-600">
+            <div className="text-gray-600 hidden sm:block">
               Progress: {answeredQuestions}/{questions.length}
             </div>
           </div>
         </div>
-        
-        <div className="mt-3">
-          <Progress value={progress} className="h-2" />
-        </div>
       </div>
 
-      <div className="flex-1 flex">
-        {/* Question Navigation Sidebar */}
-        <div className="w-64 bg-white shadow-sm border-r p-4">
-          <h3 className="font-semibold text-gray-900 mb-4">Questions</h3>
-          <div className="grid grid-cols-4 gap-2">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[260px_1fr]">
+        {/* Sidebar */}
+        <div className="bg-white shadow-sm border-r p-4 overflow-x-auto md:overflow-x-hidden flex md:block space-x-2 md:space-x-0">
+          <div className="flex md:grid md:grid-cols-4 gap-2">
             {questions.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToQuestion(index)}
                 className={`
                   w-10 h-10 rounded text-sm font-medium transition-colors
-                  ${currentQuestion === index 
-                    ? 'bg-blue-600 text-white' 
-                    : answers[index] !== -1 
-                      ? 'bg-green-200 text-green-700 hover:bg-green-200' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ${currentQuestion === index
+                    ? "bg-blue-600 text-white"
+                    : answers[index] !== -1
+                    ? "bg-green-200 text-green-700 hover:bg-green-200"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }
                 `}
               >
@@ -1056,57 +1036,43 @@ try {
               </button>
             ))}
           </div>
-          
-          <div className="mt-6 space-y-2 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-green-200 rounded"></div>
-              <span>Answered</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-gray-100 rounded"></div>
-              <span>Not Answered</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-blue-600 rounded"></div>
-              <span>Current</span>
-            </div>
-          </div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 p-6">
-          <Card className="max-w-4xl mx-auto">
+        {/* Main */}
+        <div className="p-4 sm:p-6 lg:p-8">
+          <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-lg">
-                Question {currentQuestion + 1}
-              </CardTitle>
+              <CardTitle className="text-lg">Question {currentQuestion + 1}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="text-lg text-gray-900 leading-relaxed">
                 {questions[currentQuestion]?.question}
               </div>
-              
               <div className="space-y-3">
                 {questions[currentQuestion]?.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
                     className={`
-                      w-full text-left p-4 rounded-lg border-2 transition-all
-                      ${answers[currentQuestion] === index
-                        ? 'border-sky-500 bg-sky-50 text-sky-900'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      w-full text-left p-4 rounded-lg border-2 transition-all text-base
+                      ${
+                        answers[currentQuestion] === index
+                          ? "border-sky-500 bg-sky-50 text-sky-900"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }
                     `}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`
-                        w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-medium
-                        ${answers[currentQuestion] === index
-                          ? 'border-sky-500 bg-sky-500 text-white'
-                          : 'border-gray-300'
-                        }
-                      `}>
+                      <div
+                        className={`
+                          w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-medium
+                          ${
+                            answers[currentQuestion] === index
+                              ? "border-sky-500 bg-sky-500 text-white"
+                              : "border-gray-300"
+                          }
+                        `}
+                      >
                         {String.fromCharCode(65 + index)}
                       </div>
                       <span>{option}</span>
@@ -1116,36 +1082,41 @@ try {
               </div>
             </CardContent>
           </Card>
-          
-          {/* Navigation Controls */}
-          <div className="max-w-4xl mx-auto mt-6 flex justify-between items-center">
+
+          <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <Button
               onClick={prevQuestion}
               disabled={currentQuestion === 0}
-              className="flex items-center bg-blue-400 hover:bg-blue-700 space-x-2"
+              className="flex items-center bg-blue-400 hover:bg-blue-700 space-x-2 w-1/2 sm:w-auto justify-center"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Previous</span>
             </Button>
-            
-            <div className="flex space-x-3">
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               {currentQuestion === questions.length - 1 ? (
-                <Button
-                  onClick={handleSubmit}
-                  className="bg-green-600 hover:bg-green-700 text-white flex items-center space-x-2"
-                >
-                  <Flag className="w-4 h-4" />
-                  <span>Submit Exam</span>
-                </Button>
-              ) : (
-                <Button
-                  onClick={nextQuestion}
-                  className="flex items-center bg-sky-400 hover:bg-sky-700 space-x-2"
-                >
-                  <span>Next</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              )}
+                <div className="flex justify-center w-full sm:w-auto">
+                  <Button
+                    onClick={handleSubmit}
+                    className="bg-green-600 hover:bg-green-700 text-white flex items-center space-x-2 w-full sm:w-auto justify-center"
+                  >
+                    <Flag className="w-4 h-4" />
+                    <span>Submit Exam</span>
+                  </Button>
+                </div>
+              ) : null}
+
+              {currentQuestion !== questions.length - 1 ? (
+                <div className="flex justify-center w-full sm:w-auto">
+                  <Button
+                    onClick={nextQuestion}
+                    className="flex items-center bg-sky-400 hover:bg-sky-700 space-x-2 w-1/2 sm:w-auto justify-center"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

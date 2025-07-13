@@ -92,7 +92,7 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const handleHome = () => navigate("/subjectselection");
+  const handleHome = () => { navigate("/subjectselection"); setIsSidebarOpen(false);}
   const handleScore = () => navigate("/examscore");
   const handleLogin = () => navigate("/login");
   const handleSignIn = () => navigate("/signup");
@@ -100,7 +100,7 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Mobile Toggle Button */}
-      <div className="md:hidden flex justify-between items-center px-4 py-4 bg-white shadow-md">
+      <div className="md:hidden flex justify-between items-center px-4 py-4 bg-white shadow-md relative z-30">
         <div className="flex items-center">
           <BookOpen className="w-8 h-8 text-sky-600 mr-2" />
           <span className="text-xl font-bold text-sky-800">TechExamHub</span>
@@ -123,7 +123,7 @@ const SubjectSelection = ({ onSubjectSelect }: SubjectSelectionProps) => {
           <BookOpen className="w-8 h-8 text-sky-600 mr-2" />
           <span className="text-xl font-bold text-sky-800">TechExamHub</span>
         </div>
-        <nav className="space-y-4 w-full">
+        <nav className="space-y-4 w-full mt-10">
           <button
             onClick={handleHome}
             className="flex items-center px-4 py-2 text-sky-700 hover:bg-sky-100 w-full rounded-lg transition"
