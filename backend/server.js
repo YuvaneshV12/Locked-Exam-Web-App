@@ -8,7 +8,13 @@ dotenv.config(); // Load environment variables from .env
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://locked-exam-app.onrender.com', // or '*', for all origins (for testing only)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // if using cookies/session
+}));
+
 app.use(express.json());
 
 // MySQL connection using Clever Cloud env variables
