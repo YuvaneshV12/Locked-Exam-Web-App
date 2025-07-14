@@ -2,13 +2,17 @@ import express from "express";
 import cors from "cors";
 import mysql from "mysql2";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config(); // Load environment variables from .env
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 5000;
 
-const cors = require('cors');
 app.use(cors({
   origin: 'https://locked-exam-app.onrender.com', // or '*', for all origins (for testing only)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
