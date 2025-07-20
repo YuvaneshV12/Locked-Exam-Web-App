@@ -2,13 +2,23 @@ import express from "express";
 import cors from "cors";
 import mysql from "mysql2";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config(); // Load environment variables from .env
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://locked-exam-app.onrender.com', // or '*', for all origins (for testing only)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // if using cookies/session
+}));
+
 app.use(express.json());
 
 // MySQL connection using Clever Cloud env variables
@@ -96,6 +106,10 @@ app.post("/api/login", (req, res) => {
     }
     res.json({ success: true, message: "Login successful", user });
   });
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.listen(PORT, () => {
