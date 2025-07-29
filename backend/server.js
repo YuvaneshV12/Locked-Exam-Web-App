@@ -4,24 +4,27 @@ import mysql from "mysql2";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import nodemailer from "nodemailer";
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: 'https://locked-exam-app.onrender.com', // or '*', for all origins (for testing only)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // if using cookies/session
-}));
+app.use(
+  cors({
+    origin: "https://locked-exam-app.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
-// MySQL connection using Clever Cloud env variables
+// MySQL connection
 const db = mysql.createConnection({
   host: process.env.MYSQL_ADDON_HOST,
   user: process.env.MYSQL_ADDON_USER,
@@ -32,15 +35,70 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.error("❌ MySQL connection failed:");
-    console.error("Host:", process.env.MYSQL_ADDON_HOST);
-    console.error("User:", process.env.MYSQL_ADDON_USER);
-    console.error("Database:", process.env.MYSQL_ADDON_DB);
-    console.error("Error Details:", err.message);
+    console.error("❌ MySQL connection failed:", err.message);
     return;
   }
   console.log("✅ Connected to MySQL DB successfully");
 });
+
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: process.env.SMTP_SECURE === "true",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+// In-memory OTP store: { email: { otp, expiresAt } }
+const otpStore = {};
+
+// Generate 6-digit OTP
+function generateOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Send OTP email function
+async function sendOtpEmail(email) {
+  const otp = generateOtp();
+  const mailOptions = {
+    from: `"TechExamHub" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: "Your OTP for TechExamHub Signup",
+    text: `Your OTP is: ${otp}. It is valid for 5 minutes.`,
+    html: `<p>Your OTP is: <b>${otp}</b>. It is valid for 5 minutes.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    // Store OTP and expiration time
+    otpStore[email] = {
+      otp,
+      expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes validity
+    };
+    return true;
+  } catch (error) {
+    console.error("Error sending OTP email:", error);
+    return false;
+  }
+}
+
+// Verify OTP function
+function verifyOtp(email, otp) {
+  const record = otpStore[email];
+  if (!record) return false;
+
+  if (record.otp === otp && record.expiresAt > Date.now()) {
+    // OTP is valid; remove it so it can't be reused
+    delete otpStore[email];
+    return true;
+  }
+  return false;
+}
+
+// Routes
 
 app.post("/api/submit-score", (req, res) => {
   const { userId, subjectId, subjectName, score, timeSpent } = req.body;
@@ -50,13 +108,17 @@ app.post("/api/submit-score", (req, res) => {
     VALUES (?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [userId, subjectId, subjectName, score, timeSpent], (err, result) => {
-    if (err) {
-      console.error("Error submitting score:", err);
-      return res.status(500).json({ message: "Failed to submit score" });
+  db.query(
+    sql,
+    [userId, subjectId, subjectName, score, timeSpent],
+    (err, result) => {
+      if (err) {
+        console.error("Error submitting score:", err);
+        return res.status(500).json({ message: "Failed to submit score" });
+      }
+      res.status(200).json({ message: "Score submitted successfully" });
     }
-    res.status(200).json({ message: "Score submitted successfully" });
-  });
+  );
 });
 
 app.get("/api/fetch-scores/:userId", (req, res) => {
@@ -79,7 +141,8 @@ app.get("/api/fetch-scores/:userId", (req, res) => {
 
 app.post("/api/signup", (req, res) => {
   const { fullName, email, password } = req.body;
-  const sql = "INSERT INTO exam_login (full_name, email, password) VALUES (?, ?, ?)";
+  const sql =
+    "INSERT INTO exam_login (full_name, email, password) VALUES (?, ?, ?)";
   db.query(sql, [fullName, email, password], (err, result) => {
     if (err) {
       console.error("Insert error:", err);
@@ -108,6 +171,33 @@ app.post("/api/login", (req, res) => {
   });
 });
 
+// OTP endpoints
+
+app.post("/api/send-otp", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email required" });
+
+  const success = await sendOtpEmail(email);
+  if (success) {
+    res.json({ message: "OTP sent" });
+  } else {
+    res.status(500).json({ message: "Failed to send OTP" });
+  }
+});
+
+app.post("/api/verify-otp", (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp)
+    return res.status(400).json({ message: "Email and OTP required" });
+
+  if (verifyOtp(email, otp)) {
+    res.json({ message: "OTP verified" });
+  } else {
+    res.status(400).json({ message: "Invalid or expired OTP" });
+  }
+});
+
+// Serve frontend files
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

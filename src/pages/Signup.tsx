@@ -16,9 +16,12 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);  // Optional loading state
   const navigate = useNavigate();
 
-  const handleSignup = async (e: React.FormEvent) => {
+    const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -26,27 +29,78 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
+
+    try {
+      // First, register the user in the database
+      const signupRes = await fetch("https://locked-exam-web-app.onrender.com/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, password }),
+      });
+
+      const signupData = await signupRes.json();
+
+      if (!signupRes.ok) {
+        alert(signupData.message || "Signup failed");
+        return;
+      }
+
+      // Then, send OTP
+      const otpRes = await fetch("https://locked-exam-web-app.onrender.com/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const otpData = await otpRes.json();
+
+      if (otpRes.ok) {
+        setOtpSent(true);
+        alert("OTP sent to your email.");
+      } else {
+        alert(otpData.message || "Failed to send OTP.");
+      }
+
+    } catch (err) {
+      console.error("Signup error:", err);
+      alert("Server error.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      alert("Please enter the OTP.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const response = await fetch(
-        "https://locked-exam-web-app.onrender.com/api/signup",
+        "https://locked-exam-web-app.onrender.com/api/verify-otp", // Use your real verify API endpoint here
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ fullName, email, password }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
         }
       );
 
       const data = await response.json();
+
       if (response.ok) {
+        alert("Signup successful!");
         navigate("/login");
       } else {
-        alert(data.message || "Signup failed.");
+        alert(data.message || "Invalid OTP.");
       }
     } catch (err) {
-      console.error("Signup error:", err);
-      alert("Server error.");
+      console.error("OTP verify error:", err);
+      alert("Verification failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,6 +149,7 @@ const Signup = () => {
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Enter your full name"
                   required
+                  disabled={otpSent} // disable after OTP sent
                 />
               </div>
 
@@ -113,6 +168,7 @@ const Signup = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
+                  disabled={otpSent} // disable after OTP sent
                 />
               </div>
 
@@ -131,6 +187,7 @@ const Signup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
+                  disabled={otpSent} // disable after OTP sent
                 />
               </div>
 
@@ -149,16 +206,47 @@ const Signup = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                   required
+                  disabled={otpSent} // disable after OTP sent
                 />
               </div>
 
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-lg shadow-md transition text-lg sm:text-xl py-3 sm:py-4"
-              >
-                Sign Up
-              </Button>
+              {/* OTP verification */}
+              {!otpSent ? (
+                <Button
+                  type="submit"
+                  className="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-lg shadow-md transition text-lg sm:text-xl py-3 sm:py-4"
+                  disabled={loading}
+                >
+                  {loading ? "Sending OTP..." : "Sign Up"}
+                </Button>
+              ) : (
+                <>
+                  <div>
+                    <label
+                      htmlFor="otp"
+                      className="block text-base sm:text-lg font-medium text-sky-800 mb-2"
+                    >
+                      Enter OTP
+                    </label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      placeholder="Enter the OTP sent to your email"
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition text-lg sm:text-xl py-3 sm:py-4 mt-4"
+                    disabled={loading}
+                  >
+                    {loading ? "Verifying..." : "Verify OTP"}
+                  </Button>
+                </>
+              )}
             </form>
 
             {/* Login Link */}

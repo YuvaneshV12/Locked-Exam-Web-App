@@ -895,17 +895,17 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   }, [examStarted, handleSubmit]);
 
   useEffect(() => {
-    const handleFullscreenExit = () => {
-      if (!document.fullscreenElement && examStarted) {
-        toast.error("Fullscreen exited! Submitting exam.");
-        handleSubmit();
-      }
+    if (!examStarted) return;
+
+    const handleWindowBlur = () => {
+      toast.error("Focus lost! You switched apps or minimized. Exam submitted.");
+      handleSubmit();
     };
 
-    document.addEventListener("fullscreenchange", handleFullscreenExit);
+    window.addEventListener("blur", handleWindowBlur);
 
     return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenExit);
+      window.removeEventListener("blur", handleWindowBlur);
     };
   }, [examStarted, handleSubmit]);
 
