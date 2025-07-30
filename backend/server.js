@@ -14,9 +14,21 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  `http://localhost:8080`,
+  `http://localhost:${PORT}`,
+  `https://locked-exam-web-app.onrender.com`
+];
+
 app.use(
   cors({
-    origin: "https://locked-exam-app.onrender.com",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS: " + origin));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -61,26 +73,34 @@ function generateOtp() {
 }
 
 // Send OTP email function
-async function sendOtpEmail(email) {
-  const otp = generateOtp();
+
+export async function sendOtpEmail(email) {
+  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: process.env.SMTP_SECURE === "true",
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
   const mailOptions = {
     from: `"TechExamHub" <${process.env.SMTP_USER}>`,
     to: email,
     subject: "Your OTP for TechExamHub Signup",
-    text: `Your OTP is: ${otp}. It is valid for 5 minutes.`,
     html: `<p>Your OTP is: <b>${otp}</b>. It is valid for 5 minutes.</p>`,
   };
 
   try {
+    await transporter.verify();
     await transporter.sendMail(mailOptions);
-    // Store OTP and expiration time
-    otpStore[email] = {
-      otp,
-      expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes validity
-    };
+    console.log("✅ OTP email sent to:", email);
     return true;
   } catch (error) {
-    console.error("Error sending OTP email:", error);
+    console.error("❌ Failed to send OTP email:", error.message || error);
     return false;
   }
 }
@@ -197,10 +217,6 @@ app.post("/api/verify-otp", (req, res) => {
   }
 });
 
-// Serve frontend files
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
