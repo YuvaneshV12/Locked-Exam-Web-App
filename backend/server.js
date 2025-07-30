@@ -14,21 +14,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = [
-  `http://localhost:8080`,
-  `http://localhost:${PORT}`,
-  `https://locked-exam-web-app.onrender.com`
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS: " + origin));
-      }
-    },
+    origin: "https://locked-exam-app.onrender.com", // frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
