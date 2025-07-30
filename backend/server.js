@@ -183,13 +183,22 @@ app.post("/api/login", (req, res) => {
 
 app.post("/api/send-otp", async (req, res) => {
   const { email } = req.body;
-  if (!email) return res.status(400).json({ message: "Email required" });
 
-  const success = await sendOtpEmail(email);
-  if (success) {
-    res.json({ message: "OTP sent" });
-  } else {
-    res.status(500).json({ message: "Failed to send OTP" });
+  if (!email) {
+    return res.status(400).json({ message: "Email required" });
+  }
+
+  try {
+    const success = await sendOtpEmail(email);
+    if (success) {
+      res.json({ message: "OTP sent" });
+    } else {
+      // Something failed silently inside sendOtpEmail
+      res.status(500).json({ message: "Failed to send OTP (check server logs)" });
+    }
+  } catch (error) {
+    console.error("Error in /api/send-otp:", error);
+    res.status(500).json({ message: "Error sending OTP", error: error.message });
   }
 });
 
