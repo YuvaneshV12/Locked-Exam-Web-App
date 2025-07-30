@@ -63,7 +63,13 @@ function generateOtp() {
 // Send OTP email function
 
 export async function sendOtpEmail(email) {
-  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+
+  // Store the OTP in memory with 5-minute expiry
+  otpStore[email] = {
+    otp,
+    expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes from now
+  };
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -83,8 +89,8 @@ export async function sendOtpEmail(email) {
   };
 
   try {
-    await transporter.verify();
-    await transporter.sendMail(mailOptions);
+    await transporter.verify(); // Verify SMTP settings
+    await transporter.sendMail(mailOptions); // Send OTP email
     console.log("✅ OTP email sent to:", email);
     return true;
   } catch (error) {
