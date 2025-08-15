@@ -34,6 +34,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
   const [examStarted, setExamStarted] = useState(false);
   const [subjectName] = useState(subject.name);
 
+  // Enter fullscreen
   const enterFullscreen = useCallback(async () => {
     try {
       if (document.documentElement.requestFullscreen) {
@@ -46,6 +47,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     }
   }, []);
 
+  // Exit fullscreen
   const exitFullscreen = useCallback(async () => {
     try {
       if (document.exitFullscreen) {
@@ -57,12 +59,14 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     }
   }, []);
 
+  // Start exam
   const handleExamStart = useCallback(async () => {
     await enterFullscreen();
     setExamStarted(true);
     toast.success("Exam started! Timer is now running.");
   }, [enterFullscreen]);
 
+  // Calculate score
   const calculateScore = useCallback(() => {
     let correct = 0;
     answers.forEach((answer, index) => {
@@ -73,6 +77,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     return correct;
   }, [answers, questions]);
 
+  // Submit exam
   const handleSubmit = useCallback(async () => {
     const score = calculateScore();
     const timeSpent = subject.duration * 60 - timeLeft;
@@ -94,7 +99,6 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
           timeSpent,
         }),
       });
-      //toast.success("Score submitted successfully");
     } catch (err) {
       toast.error("Failed to submit score");
       console.error(err);
@@ -104,6 +108,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     onExamComplete(answers, timeSpent, score);
   }, [answers, timeLeft, subject.id, subjectName, subject.duration, calculateScore, exitFullscreen, onExamComplete]);
 
+  // Timer
   useEffect(() => {
     if (!examStarted) return;
 
@@ -120,8 +125,28 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     return () => clearInterval(timer);
   }, [examStarted, handleSubmit]);
 
+  // Security: blur, tab switch, fullscreen exit, beforeunload
   useEffect(() => {
     if (!examStarted) return;
+
+    const handleWindowBlur = () => {
+      toast.error("Focus lost! Exam submitted.");
+      handleSubmit();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.error("Tab switch detected! Exam submitted.");
+        handleSubmit();
+      }
+    };
+
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        toast.error("You exited fullscreen. Exam submitted.");
+        handleSubmit();
+      }
+    };
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       handleSubmit();
@@ -129,34 +154,16 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
       e.returnValue = "";
     };
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        toast.error("Tab switch detected. Exam Submitted.");
-        handleSubmit();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [examStarted, handleSubmit]);
-
-  useEffect(() => {
-    if (!examStarted) return;
-
-    const handleWindowBlur = () => {
-      toast.error("Focus lost! You switched apps or minimized. Exam submitted.");
-      handleSubmit();
-    };
-
     window.addEventListener("blur", handleWindowBlur);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("blur", handleWindowBlur);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [examStarted, handleSubmit]);
 
@@ -190,6 +197,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
 
   const answeredQuestions = answers.filter((answer) => answer !== -1).length;
 
+  // Render start screen
   if (!examStarted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-sky-200 via-sky-100 to-white flex items-center justify-center px-4 py-6">
@@ -240,6 +248,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
     );
   }
 
+  // Render exam interface
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
@@ -355,9 +364,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
                     <span>Submit Exam</span>
                   </Button>
                 </div>
-              ) : null}
-
-              {currentQuestion !== questions.length - 1 ? (
+              ) : (
                 <div className="flex justify-center w-full sm:w-auto">
                   <Button
                     onClick={nextQuestion}
@@ -367,7 +374,7 @@ const ExamInterface = ({ subject, onExamComplete, onExit }: ExamInterfaceProps) 
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>

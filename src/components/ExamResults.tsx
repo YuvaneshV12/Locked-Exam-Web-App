@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Clock, CheckCircle, XCircle, RotateCcw, Home } from "lucide-react";
+import QuestionAnswered from "./QuestionAnswered"; // import your review component
+
+interface Question {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
 
 interface ExamResultsProps {
   subject: string;
@@ -9,6 +17,7 @@ interface ExamResultsProps {
   totalQuestions: number;
   timeSpent: number; // in seconds
   answers: number[];
+  questions: Question[]; // pass original questions
   onRetakeExam: () => void;
   onBackToHome: () => void;
 }
@@ -19,9 +28,12 @@ const ExamResults = ({
   totalQuestions,
   timeSpent,
   answers,
+  questions,
   onRetakeExam,
   onBackToHome,
 }: ExamResultsProps) => {
+  const [showReview, setShowReview] = useState(false);
+
   const percentage = Math.round((score / totalQuestions) * 100);
   const passed = percentage >= 60;
   const timeInMinutes = Math.floor(timeSpent / 60);
@@ -44,6 +56,11 @@ const ExamResults = ({
     if (percentage >= 60) return "Well Done! ✨";
     return "Keep Learning! 📚";
   };
+
+  // Show review page if user clicks "Review Answers"
+  if (showReview) {
+    return <QuestionAnswered questions={questions} userAnswers={answers} onBack={() => setShowReview(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-4 sm:px-6 md:px-12">
@@ -89,7 +106,7 @@ const ExamResults = ({
         </div>
 
         {/* Result Message and Progress */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
+        <Card className="mb-4 bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-xl sm:text-2xl">{getResultMessage()}</CardTitle>
           </CardHeader>
@@ -116,9 +133,7 @@ const ExamResults = ({
                   ) : (
                     <XCircle className="w-5 h-5 text-red-600 mr-2" />
                   )}
-                  <span
-                    className={`font-medium ${passed ? "text-green-800" : "text-red-800"}`}
-                  >
+                  <span className={`font-medium ${passed ? "text-green-800" : "text-red-800"}`}>
                     {passed
                       ? "Congratulations! You passed the exam."
                       : "Better luck next time! Keep studying and try again."}
@@ -129,32 +144,18 @@ const ExamResults = ({
           </CardContent>
         </Card>
 
-        {/* Performance Breakdown */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Performance Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">{score}</div>
-                <div className="text-sm text-green-700">Correct</div>
-              </div>
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <div className="text-2xl font-bold text-red-600">{totalQuestions - score}</div>
-                <div className="text-sm text-red-700">Incorrect</div>
-              </div>
-              <div className="text-center p-4 bg-gray-100 rounded-lg">
-                <div className="text-2xl font-bold text-gray-600">{totalQuestions}</div>
-                <div className="text-sm text-gray-700">Total</div>
-              </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">{percentage}%</div>
-                <div className="text-sm text-blue-700">Accuracy</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Show Review Button */}
+        <div className="flex justify-center mb-4">
+          <Button
+            onClick={() => setShowReview(true)}
+            variant="outline"
+            size="lg"
+            className="flex items-center justify-center space-x-2 bg-red-50 border-red-400 hover:bg-red-100"
+          >
+            <XCircle className="w-5 h-5 text-red-600" />
+            <span>Review Answers</span>
+          </Button>
+        </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
