@@ -39,7 +39,7 @@ const Login = () => {
       } else if (data.message === "Invalid credentials") {
         alert("Incorrect email or password.");
       } else {
-        alert("Something went wrong.");
+        alert("Something went wrong."); 
       }
     } catch (err) {
       console.error("Login error:", err);

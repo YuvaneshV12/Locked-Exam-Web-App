@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { questionsData, Question } from "./QuestionsData";
+import { questionsData, Question } from "./questionsData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, ChevronLeft, ChevronRight, Flag, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
